@@ -1,0 +1,7 @@
+Some text here<br/>
+We found the following Robots in mongo:<br/>
+<ul>
+    <% robots.forEach((robot) => { %>
+    <li><%= robot._id %> - <%= robot.name %></li>
+    <% }); %>
+</ul>
