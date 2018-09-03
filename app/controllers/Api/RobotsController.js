@@ -61,7 +61,7 @@ class RobotsController extends baseController {
      * @param res
      */
     deleteAction(req, res) {
-        Robot.remove({ _id: req.params.id }, (err, robot) => {
+        Robot.remove({ _id: req.params.id }, (err) => {
             if (err)
                 this.jsonResponse(res, 400, { 'error': err });
 

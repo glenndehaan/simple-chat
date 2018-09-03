@@ -1,4 +1,5 @@
-const config = require("../../config/config");
+const config = require("../../config");
+const assets = require("../../helpers/modules/Assets");
 
 class BaseController {
     constructor() {
@@ -6,7 +7,11 @@ class BaseController {
             config: config,
             protocol: '',
             hostname: '',
-            baseUrl: ''
+            baseUrl: '',
+            assets: {
+                js: false,
+                css: false
+            }
         }
     }
 
@@ -20,6 +25,9 @@ class BaseController {
         this.baseConfig.hostname = request.get('host');
         this.baseConfig.protocol = request.protocol;
         this.baseConfig.baseUrl = `${request.protocol}://${request.get('host')}${config.application.basePath}`;
+
+        this.baseConfig.assets.js = assets["main.js"];
+        this.baseConfig.assets.css = assets["main.css"];
 
         return Object.assign(this.baseConfig, pageSpecificConfig);
     }

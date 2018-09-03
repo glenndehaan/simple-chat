@@ -1,5 +1,4 @@
 const baseController = require('./BaseController');
-const Robot = require('../../collections/Robot');
 
 class IndexController extends baseController {
     /**
@@ -9,16 +8,10 @@ class IndexController extends baseController {
      * @param res
      */
     indexAction(req, res) {
-        Robot.find((err, robots) => {
-            if (err)
-                res.send(err);
-
-            res.render('index', this.mergePageConfig(req, {
-                template: 'index/index',
-                pageTitle: 'Home',
-                robots: robots
-            }));
-        });
+        res.render('index', this.mergePageConfig(req, {
+            template: 'index/index',
+            pageTitle: 'Home'
+        }));
     }
 
     /**

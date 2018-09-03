@@ -8,3 +8,6 @@
 # Dependency managers
 node_modules/
 npm-debug.log
+
+# Logs
+*.log

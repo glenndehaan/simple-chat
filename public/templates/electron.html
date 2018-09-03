@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Simple Chat</title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
+
+        <meta name="description" content="">
+        <meta name="author" content="">
+    </head>
+    <body>
+        <script>
+            const assets = require("../../app/helpers/modules/Assets");
+            document.head.innerHTML += `<link href="${__dirname}/../dist/${assets["main.css"]}" rel="stylesheet" type="text/css"/>`;
+
+            const js = document.createElement('script');
+            js.setAttribute('src', `${__dirname}/../dist/${assets["main.js"]}`);
+            document.body.appendChild(js);
+        </script>
+    </body>
+</html>

@@ -10,10 +10,24 @@ const mongoose = require('mongoose');
 /**
  * Import own packages
  */
-const config = require('./config/config');
+const config = require('./config');
 const webRouter = require('./routers/Web');
 const apiRouter = require('./routers/Api');
 const indexController = require('./controllers/Web/IndexController');
+
+/**
+ * Check if we are using the dev version
+ */
+const dev = process.env.NODE_ENV !== 'production';
+
+/**
+ * Init logger and set log level
+ */
+global.log = require('simple-node-logger').createSimpleLogger({
+    logFilePath: `${dev ? __dirname : process.cwd()}${config.logger.location}`,
+    timestampFormat: 'YYYY-MM-DD HH:mm:ss.SSS'
+});
+global.log.setLevel(config.logger.level);
 
 /**
  * Set template engine
@@ -96,7 +110,7 @@ app.disable('x-powered-by');
  * Start listening on port
  */
 const server = app.listen(config.application.port, config.application.bind, () => {
-    console.log(`[NODE] App is running on: ${config.application.bind}:${config.application.port}`);
+    global.log.info(`[NODE] App is running on: ${config.application.bind}:${config.application.port}`);
 });
 
 /**
@@ -106,17 +120,17 @@ if (typeof config.mongo !== "undefined") {
     if (config.mongo.auth) {
         mongoose.connect(`mongodb://${config.mongo.username}:${config.mongo.password}@${config.mongo.host}:${config.mongo.port}/${config.mongo.database}?authSource=admin`, (err) => {
             if (err) {
-                console.log(`[MONGO] Error while connecting: ${err}`)
+                global.log.error(`[MONGO] Error while connecting: ${err}`)
             } else {
-                console.log(`[MONGO] Mongo connection successful!`);
+                global.log.info(`[MONGO] Mongo connection successful!`);
             }
         });
     } else {
         mongoose.connect(`mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.database}`, (err) => {
             if (err) {
-                console.log(`[MONGO] Error while connecting: ${err}`)
+                global.log.error(`[MONGO] Error while connecting: ${err}`)
             } else {
-                console.log(`[MONGO] Mongo connection successful!`);
+                global.log.info(`[MONGO] Mongo connection successful!`);
             }
         });
     }
