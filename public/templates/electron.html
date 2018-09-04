@@ -12,10 +12,11 @@
     <body>
         <script>
             const assets = require("../../app/helpers/modules/Assets");
-            document.head.innerHTML += `<link href="${__dirname}/../dist/${assets["main.css"]}" rel="stylesheet" type="text/css"/>`;
+            const files = assets();
+            document.head.innerHTML += `<link href="${__dirname}/../dist/${files["main.css"]}" rel="stylesheet" type="text/css"/>`;
 
             const js = document.createElement('script');
-            js.setAttribute('src', `${__dirname}/../dist/${assets["main.js"]}`);
+            js.setAttribute('src', `${__dirname}/../dist/${files["main.js"]}`);
             document.body.appendChild(js);
         </script>
     </body>

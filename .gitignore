@@ -9,5 +9,8 @@
 node_modules/
 npm-debug.log
 
+# Build files
+public/dist
+
 # Logs
 *.log
