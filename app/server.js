@@ -14,6 +14,7 @@ const config = require('./config');
 const webRouter = require('./routers/Web');
 const apiRouter = require('./routers/Api');
 const indexController = require('./controllers/Web/IndexController');
+const Socket = require("./helpers/modules/Socket");
 
 /**
  * Check if we are using the dev version
@@ -111,6 +112,7 @@ app.disable('x-powered-by');
  */
 const server = app.listen(config.application.port, config.application.bind, () => {
     global.log.info(`[NODE] App is running on: ${config.application.bind}:${config.application.port}`);
+    new Socket(app);
 });
 
 /**
