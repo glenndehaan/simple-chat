@@ -62,12 +62,14 @@
     "public/dist"
   ],
   "dependencies": {
+    "atob": "^2.1.2",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "body-parser": "^1.17.2",
+    "btoa": "^1.2.1",
     "concurrently": "^3.6.0",
     "css-loader": "^0.28.11",
     "ejs": "^2.5.8",

@@ -42,6 +42,11 @@ app.set('views', `${__dirname}/views`);
 app.enable('trust proxy');
 
 /**
+ * Setup socket
+ */
+new Socket(app);
+
+/**
  * Serve static public dir
  */
 app.use(express.static(`${__dirname}/../public`));
@@ -112,7 +117,6 @@ app.disable('x-powered-by');
  */
 const server = app.listen(config.application.port, config.application.bind, () => {
     global.log.info(`[NODE] App is running on: ${config.application.bind}:${config.application.port}`);
-    new Socket(app);
 });
 
 /**

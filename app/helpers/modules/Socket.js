@@ -1,4 +1,6 @@
 const uuidv4 = require('uuid/v4');
+const btoa = require('btoa');
+const atob = require('atob');
 const config = require('../../config');
 
 class Socket {
@@ -33,7 +35,7 @@ class Socket {
                 }
 
                 /**
-                 * Call used when player needs an ID (First time player)
+                 * Demo function
                  */
                 if (dataString.instruction === "hello") {
                     global.log.info(`[SOCKET][${ws.id}] User hello: ${JSON.stringify(dataString.data)}`);
@@ -46,6 +48,8 @@ class Socket {
             ws.on('close', () => {
                 global.log.info(`[SOCKET][${ws.id}] Disconnected!`);
             });
+
+            global.log.info(`[SOCKET][${ws.id}] User connected!`)
 
             /**
              * Send server hello
@@ -72,8 +76,6 @@ class Socket {
         this.socket.getWss().clients.forEach(client => {
             // Check if connection is still open
             if (client.readyState !== client.OPEN) return;
-            // Check if client is authenticated
-            if (!client.gameId) return;
 
             client.send(this.encrypt({
                 instruction,
