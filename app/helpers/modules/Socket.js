@@ -35,17 +35,18 @@ class Socket {
                 }
 
                 /**
-                 * Demo function
+                 * Hello function
                  */
                 if (dataString.instruction === "hello") {
                     global.log.info(`[SOCKET][${ws.id}] User hello: ${JSON.stringify(dataString.data)}`);
                 }
 
                 /**
-                 * Demo function
+                 * Broadcasts message to all clients
                  */
                 if (dataString.instruction === "message") {
                     global.log.info(`[SOCKET][${ws.id}] User message: ${JSON.stringify(dataString.data)}`);
+                    this.informAllSockets("message", dataString.data);
                 }
             });
 

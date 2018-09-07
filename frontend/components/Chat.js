@@ -12,6 +12,7 @@ export default class Chat extends Component {
             messages: null
         };
         this.message = false;
+        this.messages = false;
     }
 
     /**
@@ -21,7 +22,8 @@ export default class Chat extends Component {
         if(this.message.value !== "") {
             Socket.send("message", {
                 nickname: this.props.nickname,
-                message: this.message.value
+                message: this.message.value,
+                send: new Date().getTime()
             });
 
             this.message.value = "";
@@ -40,6 +42,34 @@ export default class Chat extends Component {
     }
 
     /**
+     * Function for incoming messages from socket
+     *
+     * @param data
+     */
+    onMessage(data) {
+        this.messages.innerHTML += `
+            <div>
+                <stong>${data.nickname}</stong>:<br/>
+                ${data.message}
+            </div>
+        `;
+    }
+
+    /**
+     * Runs when component mounts
+     */
+    componentDidMount() {
+        Socket.on("message", (data) => this.onMessage(data));
+    }
+
+    /**
+     * Runs before component unmounts
+     */
+    componentWillUnmount() {
+        Socket.off("message", (data) => this.onMessage(data));
+    }
+
+    /**
      * Preact render function
      *
      * @returns {*}
@@ -47,7 +77,7 @@ export default class Chat extends Component {
     render() {
         return (
             <div id="chat">
-                <div id="chat-box">
+                <div id="chat-box" ref={c => this.messages = c}>
                     <div className="message general">Waiting for someone to talk</div><hr/>
                 </div>
                 <div id="chat-controls">
