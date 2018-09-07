@@ -1,9 +1,52 @@
 import {h, Component, render} from 'preact';
+import Connect from './components/Connect';
+import Chat from './components/Chat';
 import Socket from './modules/socket';
 
 class App extends Component {
-    componentDidMount() {
-        Socket.initialize();
+    /**
+     * Constructor
+     */
+    constructor() {
+        super();
+
+        this.state = {
+            server: null,
+            nickname: null,
+            informationReady: false,
+            connected: false,
+            connectionError: false
+        };
+    }
+
+    /**
+     * Function when socket connects
+     */
+    connected() {
+        this.setState({
+            connected: true
+        });
+    }
+
+    /**
+     * Function when socket disconnects
+     */
+    disconnected() {
+        this.setState({
+            connected: false
+        });
+    }
+
+    /**
+     * Function when connect form is submit
+     */
+    connectSubmit(server, nickname) {
+        this.setState({
+            server,
+            nickname
+        });
+
+        Socket.initialize(server, nickname, () => this.connected(), () => this.disconnected());
     }
 
     /**
@@ -14,7 +57,8 @@ class App extends Component {
     render() {
         return (
             <div id="root">
-                Hi I am Preact
+                {!this.state.connected && <Connect submit={(server, nickname) => this.connectSubmit(server, nickname)}/>}
+                {this.state.connected && <Chat/>}
             </div>
         );
     }
