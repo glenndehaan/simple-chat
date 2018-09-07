@@ -58,7 +58,7 @@ class App extends Component {
         return (
             <div id="root">
                 {!this.state.connected && <Connect submit={(server, nickname) => this.connectSubmit(server, nickname)}/>}
-                {this.state.connected && <Chat/>}
+                {this.state.connected && <Chat nickname={this.state.nickname}/>}
             </div>
         );
     }

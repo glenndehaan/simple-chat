@@ -3,10 +3,9 @@ import {h, Component} from 'preact';
 export default class Connect extends Component {
     /**
      * Constructor
-     * @param props
      */
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
 
         this.nickname = null;
         this.server = null;
@@ -27,8 +26,8 @@ export default class Connect extends Component {
     render() {
         return (
             <div id="connect">
-                <input type="text" placeholder="Nickname" ref={c => this.nickname = c}/><br/>
-                <input type="text" placeholder="Server address" ref={c => this.server = c}/><br/>
+                <input type="text" placeholder="Nickname" value="user01" ref={c => this.nickname = c}/><br/>
+                <input type="text" placeholder="Server address" value="localhost:3001" ref={c => this.server = c}/><br/>
                 <button onClick={() => this.submit()}>Connect</button>
             </div>
         );

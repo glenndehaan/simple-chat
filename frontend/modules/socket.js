@@ -1,6 +1,14 @@
 import Sockette from 'sockette';
 
 export default new class Socket {
+    /**
+     * Function to setup the socket connection
+     *
+     * @param url
+     * @param nickname
+     * @param connectedCallback
+     * @param disconnectedCallback
+     */
     initialize(url, nickname, connectedCallback, disconnectedCallback) {
         this.config = {
             url: `ws://${url}/`,
@@ -14,6 +22,9 @@ export default new class Socket {
         this.setup();
     }
 
+    /**
+     * Create socket connection with ws
+     */
     setup() {
         this.ws = new Sockette(this.config.url, {
             timeout: 5e3,
@@ -34,6 +45,11 @@ export default new class Socket {
         });
     }
 
+    /**
+     * Function to handle all incoming messages
+     *
+     * @param data
+     */
     message(data) {
         const decodedMessage = atob(data);
         const message = JSON.parse(decodedMessage);
@@ -43,6 +59,25 @@ export default new class Socket {
         }
     }
 
+    /**
+     * Send a message to the server
+     *
+     * @param instruction
+     * @param data
+     */
+    send(instruction, data) {
+        this.ws.send(this.encrypt({
+            instruction,
+            data
+        }));
+    }
+
+    /**
+     * Encrypt a message
+     *
+     * @param data
+     * @return {string}
+     */
     encrypt(data) {
         const string = JSON.stringify(data);
         return btoa(string);

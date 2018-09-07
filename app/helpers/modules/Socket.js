@@ -40,6 +40,13 @@ class Socket {
                 if (dataString.instruction === "hello") {
                     global.log.info(`[SOCKET][${ws.id}] User hello: ${JSON.stringify(dataString.data)}`);
                 }
+
+                /**
+                 * Demo function
+                 */
+                if (dataString.instruction === "message") {
+                    global.log.info(`[SOCKET][${ws.id}] User message: ${JSON.stringify(dataString.data)}`);
+                }
             });
 
             /**
