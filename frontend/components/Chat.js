@@ -1,5 +1,6 @@
 import {h, Component} from 'preact';
 import Socket from '../modules/socket';
+import {fixTimeCalculation} from '../utils/Strings';
 
 export default class Chat extends Component {
     /**
@@ -47,9 +48,11 @@ export default class Chat extends Component {
      * @param data
      */
     onMessage(data) {
+        const messageDate = new Date(data.send);
+
         this.messages.innerHTML += `
             <div>
-                <stong>${data.nickname}</stong>:<br/>
+                <stong>${data.nickname} (${fixTimeCalculation(messageDate.getHours())}:${fixTimeCalculation(messageDate.getMinutes())}:${fixTimeCalculation(messageDate.getSeconds())})</stong>:<br/>
                 ${data.message}
             </div>
         `;
