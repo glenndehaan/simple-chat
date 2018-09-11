@@ -39,6 +39,17 @@ class Socket {
                  */
                 if (dataString.instruction === "hello") {
                     global.log.info(`[SOCKET][${ws.id}] User hello: ${JSON.stringify(dataString.data)}`);
+
+                    /**
+                     * Send server hello
+                     */
+                    ws.send(this.encrypt({
+                        instruction: "hello",
+                        data: {
+                            version: config.application.version,
+                            message: `${config.application.name} socket server connected!`
+                        }
+                    }));
                 }
 
                 /**
@@ -58,17 +69,6 @@ class Socket {
             });
 
             global.log.info(`[SOCKET][${ws.id}] User connected!`)
-
-            /**
-             * Send server hello
-             */
-            ws.send(this.encrypt({
-                instruction: "hello",
-                data: {
-                    ready: false,
-                    message: `${config.application.name} socket server connected!`
-                }
-            }));
         });
 
         /**

@@ -35,7 +35,10 @@ export default new class Socket {
             maxAttempts: 10,
             onopen: () => {
                 console.log('[SOCKET] Connected!');
-                this.connectedCallback();
+
+                this.send("hello", {
+                    nickname: this.config.nickname
+                });
             },
             onmessage: (e) => this.message(e.data),
             onreconnect: () => console.warn('[SOCKET] Reconnecting...'),
@@ -59,7 +62,8 @@ export default new class Socket {
         const message = JSON.parse(decodedMessage);
 
         if(message.instruction === "hello") {
-            console.log(`[SOCKET] Hello: ${message.data.message}`);
+            console.log(`[SOCKET] Hello: ${JSON.stringify(message.data)}`);
+            this.connectedCallback();
         }
 
         if(message.instruction === "message") {
