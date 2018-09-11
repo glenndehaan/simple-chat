@@ -20,7 +20,8 @@ export default new class Socket {
         this.disconnectedCallback = disconnectedCallback;
 
         this.callbacks = {
-            message: []
+            message: [],
+            users: []
         };
 
         this.setup();
@@ -68,16 +69,12 @@ export default new class Socket {
 
         if(message.instruction === "message") {
             console.log(`[SOCKET] Message: ${JSON.stringify(message.data)}`);
-
-            if(this.callbacks["message"].length > 0) {
-                for(let callback = 0; callback < this.callbacks["message"].length; callback++) {
-                    this.callbacks["message"][callback](message.data);
-                }
-            }
+            this.runBoundFunctions("message", message.data);
         }
 
         if(message.instruction === "users") {
             console.log(`[SOCKET] Users update: ${JSON.stringify(message.data)}`);
+            this.runBoundFunctions("users", message.data.users);
         }
     }
 
@@ -101,6 +98,20 @@ export default new class Socket {
         const index = this.callbacks[instruction].indexOf(callback);
         if (index > -1) {
             this.callbacks[instruction].splice(index, 1);
+        }
+    }
+
+    /**
+     * Run all bound functions
+     *
+     * @param instruction
+     * @param data
+     */
+    runBoundFunctions(instruction, data) {
+        if(this.callbacks[instruction].length > 0) {
+            for(let callback = 0; callback < this.callbacks[instruction].length; callback++) {
+                this.callbacks[instruction][callback](data);
+            }
         }
     }
 

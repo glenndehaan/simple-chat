@@ -1,6 +1,7 @@
 import {h, Component, render} from 'preact';
 import Connect from './components/Connect';
 import Chat from './components/Chat';
+import Users from './components/Users';
 import Socket from './modules/socket';
 
 class App extends Component {
@@ -59,6 +60,7 @@ class App extends Component {
             <div id="root">
                 {!this.state.connected && <Connect submit={(server, nickname) => this.connectSubmit(server, nickname)}/>}
                 {this.state.connected && <Chat nickname={this.state.nickname}/>}
+                {this.state.connected && <Users/>}
             </div>
         );
     }
