@@ -1,12 +1,16 @@
 const uuidv4 = require('uuid/v4');
 const btoa = require('btoa');
 const atob = require('atob');
+const {removeByValue} = require('../utils/Arrays');
 const config = require('../../config');
 
 class Socket {
     constructor(server) {
         this.server = server;
         this.socket = require('express-ws')(server);
+
+        this.users = [];
+
         this.init();
     }
 
@@ -19,9 +23,10 @@ class Socket {
          */
         this.server.ws('/', (ws) => {
             /**
-             * Create id
+             * Create globals
              */
             ws.id = uuidv4();
+            ws.nickname = false;
 
             /**
              * Main message bus
@@ -38,18 +43,32 @@ class Socket {
                  * Hello function
                  */
                 if (dataString.instruction === "hello") {
-                    global.log.info(`[SOCKET][${ws.id}] User hello: ${JSON.stringify(dataString.data)}`);
+                    if(typeof dataString.data.nickname !== "undefined") {
+                        //todo disconnect if nickname is in use
 
-                    /**
-                     * Send server hello
-                     */
-                    ws.send(this.encrypt({
-                        instruction: "hello",
-                        data: {
-                            version: config.application.version,
-                            message: `${config.application.name} socket server connected!`
-                        }
-                    }));
+                        ws.nickname = dataString.data.nickname;
+                        global.log.info(`[SOCKET][${ws.id}] User hello: ${JSON.stringify(dataString.data)}`);
+
+                        this.users.push(ws.nickname);
+
+                        /**
+                         * Send server hello
+                         */
+                        ws.send(this.encrypt({
+                            instruction: "hello",
+                            data: {
+                                version: config.application.version,
+                                message: `${config.application.name} socket server connected!`
+                            }
+                        }));
+
+                        /**
+                         * Send new users to sockets
+                         */
+                        this.informAllSockets("users", {
+                            users: this.users
+                        });
+                    }
                 }
 
                 /**
@@ -66,6 +85,14 @@ class Socket {
              */
             ws.on('close', () => {
                 global.log.info(`[SOCKET][${ws.id}] Disconnected!`);
+                removeByValue(this.users, ws.nickname);
+
+                /**
+                 * Send new users to sockets
+                 */
+                this.informAllSockets("users", {
+                    users: this.users
+                });
             });
 
             global.log.info(`[SOCKET][${ws.id}] User connected!`)

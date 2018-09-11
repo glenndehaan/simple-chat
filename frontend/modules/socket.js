@@ -75,6 +75,10 @@ export default new class Socket {
                 }
             }
         }
+
+        if(message.instruction === "users") {
+            console.log(`[SOCKET] Users update: ${JSON.stringify(message.data)}`);
+        }
     }
 
     /**

@@ -27,4 +27,4 @@ function fixTimeCalculation(time) {
     }
 }
 
-module.exports = {generateId, fixTimeCalculation};
+export {generateId, fixTimeCalculation};
