@@ -9,4 +9,13 @@ function removeByValue(array, value) {
     array.splice(index, 1);
 }
 
-module.exports = {removeByValue};
+function removeByObjectValue(array, property, value) {
+    for(let item = 0; item < array.length; item++) {
+        if(array[item][property] === value) {
+            array.splice(item, 1);
+            break;
+        }
+    }
+}
+
+module.exports = {removeByValue, removeByObjectValue};

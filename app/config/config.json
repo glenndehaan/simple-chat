@@ -25,5 +25,19 @@
   "logger": {
     "location": "/log/server.log",
     "level": "info"
+  },
+  "chat": {
+    "rooms": [
+      {
+        "name": "AFK/Away",
+        "default": true,
+        "muted": true
+      },
+      {
+        "name": "Room 1",
+        "default": false,
+        "muted": false
+      }
+    ]
   }
 }

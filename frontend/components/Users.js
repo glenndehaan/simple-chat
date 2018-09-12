@@ -11,8 +11,6 @@ export default class Users extends Component {
         this.state = {
             users: []
         };
-        this.message = false;
-        this.messages = false;
     }
 
     /**
@@ -48,11 +46,11 @@ export default class Users extends Component {
     render() {
         return (
             <div id="users">
-                <div id="users-box" ref={c => this.messages = c}>
+                <div id="users-box">
                     <hr/>
                     {(this.state.users.length < 1) && <span>No one is currently online</span>}
                     {this.state.users.map((user) =>
-                        <span key={user}>{user}<br/></span>
+                        <span key={user.nickname}>{user.nickname}<br/></span>
                     )}
                 </div>
             </div>

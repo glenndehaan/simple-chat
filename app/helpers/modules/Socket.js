@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid/v4');
 const btoa = require('btoa');
 const atob = require('atob');
-const {removeByValue} = require('../utils/Arrays');
+const {removeByObjectValue} = require('../utils/Arrays');
 const config = require('../../config');
 
 class Socket {
@@ -10,6 +10,41 @@ class Socket {
         this.socket = require('express-ws')(server);
 
         this.users = [];
+
+        this.preflightCheck();
+    }
+
+    /**
+     * Check if config is correct
+     */
+    preflightCheck() {
+        if(typeof config.chat === "undefined") {
+            global.log.fatal("[CONFIG] Missing chat params!");
+            setTimeout(() => {
+                process.exit(1);
+            }, 0);
+        }
+
+        if(typeof config.chat.rooms === "undefined") {
+            global.log.fatal("[CONFIG] Missing rooms!");
+            setTimeout(() => {
+                process.exit(1);
+            }, 0);
+        }
+
+        let defaultFound = false;
+        for(let item = 0; item < config.chat.rooms.length; item++) {
+            if(config.chat.rooms[item].default) {
+                if(!defaultFound) {
+                    defaultFound = true;
+                } else {
+                    global.log.fatal("[CONFIG] We can't have more then 1 default room!");
+                    setTimeout(() => {
+                        process.exit(1);
+                    }, 0);
+                }
+            }
+        }
 
         this.init();
     }
@@ -49,7 +84,10 @@ class Socket {
                         ws.nickname = dataString.data.nickname;
                         global.log.info(`[SOCKET][${ws.id}] User hello: ${JSON.stringify(dataString.data)}`);
 
-                        this.users.push(ws.nickname);
+                        this.users.push({
+                            nickname: ws.nickname,
+                            room: "afk"
+                        });
 
                         /**
                          * Send server hello
@@ -85,7 +123,7 @@ class Socket {
              */
             ws.on('close', () => {
                 global.log.info(`[SOCKET][${ws.id}] Disconnected!`);
-                removeByValue(this.users, ws.nickname);
+                removeByObjectValue(this.users, "nickname", ws.nickname);
 
                 /**
                  * Send new users to sockets
